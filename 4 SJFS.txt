@@ -1,0 +1,102 @@
+#include<iostream>
+#include<conio.h>
+using namespace std;
+int main()
+{
+	int pid[10], at[10], bt[10], tat[10], wt[10], ft[10], temp, n, i, j;
+	double avgtat = 0.0, avgwt = 0.0;
+	cout << "Enter number of processes (Max 10): ";
+	cin >> n;
+	cout << "Enter Arrival time & Burts Time:";
+	for (int i = 0;i < n;i++)
+	{
+		cout << "\nPid"; cin >> pid[i];
+		cout << "\tAT[" << i + 1 << "]:";
+		cin >> at[i];
+		cout << "\tBT[" << i + 1 << "]:";
+		cin >> bt[i];
+	}
+	//sorting on arrival time
+	for (i = 0;i < n;i++)
+	{
+		for (j = i + 1;j < n;j++)
+		{
+			if (at[j] < at[i])
+			{
+				//arrival time
+				temp = at[i];
+				at[i] = at[j];
+				at[j] = temp;
+				//pid
+				temp = pid[i];
+				pid[i] = pid[j];
+				pid[j] = temp;
+				//burst time
+				temp = bt[i];
+				bt[i] = bt[j];
+				bt[j] = temp;
+			}
+		}
+
+	}
+
+	ft[0] = at[0] + bt[0]; 	//finish time of first job
+							
+	for (i = 1;i < n;i++) //sorting remaining on burst time
+	{
+		for (j = i + 1;j < n;j++)
+		{
+			if (bt[j] < bt[i])
+			{
+				//arrival time
+				temp = at[i];
+				at[i] = at[j];
+				at[j] = temp;
+				//pid
+				temp = pid[i];
+				pid[i] = pid[j];
+				pid[j] = temp;
+				//burst time
+				temp = bt[i];
+				bt[i] = bt[j];
+				bt[j] = temp;
+			}
+		}
+
+	}
+
+	for (i = 1;i < n;i++) //finist time of remaining
+	{
+		ft[i] = ft[i - 1] + bt[i];
+	}
+	for (i = 0;i < n;i++)
+	{
+		tat[i] = ft[i] - at[i]; //calculate turn around time
+		wt[i] = tat[i] - bt[i]; //calculate waiting time
+	}
+
+	cout << "PiD \tAT \tBT \tFT \tTAT \tWT" << endl;
+	for (i = 0;i < n;i++)
+	{
+		cout << pid[i] << "\t" << at[i] << "\t" << bt[i] << "\t" << ft[i] << "\t" << tat[i] << "\t" << wt[i] << endl;
+	}
+
+	for (i = 0;i < n;i++)
+	{
+		avgtat = avgtat + tat[i];		//sum of tat
+		avgwt = avgwt + wt[i];     		//sum of wt
+	}
+	cout << "\nAvg TAT=" << avgtat / n << "\tAvg WT=" << avgwt / n;
+
+	//Gantt Chart
+	cout << "\n--Gantt Chart--\n";
+	for (i = 0; i<n; i++)
+		cout << "|\tP" << pid[i] << "\t";	//process id
+	cout << "|\n";
+	cout << at[0] << "\t\t";
+	for (i = 0; i <n; i++)
+		cout << ft[i] << "\t\t";		//finish time
+	cout << "\n";
+	_getch();
+
+}
